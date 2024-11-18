@@ -13,7 +13,7 @@ public class Main {
     private static final int PORT = 4000;
 
     public static void main(String[] args) {
-        InputOutput io = new StandardInputOutput();
+        InputOutput io = new StandardIO();
         NetworkClient netClient = new TcpClient(HOST, PORT);
         Company company = new CompanyNetProxy(netClient);
         Item[] items = CompanyItems.getItems(company);
@@ -24,15 +24,16 @@ public class Main {
     }
 
     private static Item[] addExitItem(Item[] items, NetworkClient netClient) {
-       Item[] res = Arrays.copyOf(items, items.length + 1);
-       res[items.length] = Item.of("Exit", io -> {
-        try {
-            if(netClient instanceof Closeable closeable)
-            closeable.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }, true);
-    return res;
+        Item[] res = Arrays.copyOf(items, items.length + 1);
+        res[items.length] = Item.of("Exit", io -> {
+            try {
+                if (netClient instanceof Closeable closeable) {
+                    closeable.close();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }, true);
+        return res;
     }
 }
